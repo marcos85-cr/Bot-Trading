@@ -23,7 +23,7 @@ from guardian.domain.models import (
     SignalAction,
 )
 from guardian.domain.ports import ExchangePort, OrderExecutionUnknown, TradingRepository
-from guardian.domain.risk import RiskManager
+from guardian.domain.risk import RiskManager, compute_risk_limits_from_equity
 from guardian.domain.strategy import AdaptiveLongStrategy, strategy_from_payload
 
 logger = logging.getLogger(__name__)
@@ -53,6 +53,8 @@ class TradingEngine:
         paper_auto_deploy_experimental: bool = True,
         paper_experimental_execution_enabled: bool = False,
         shadow_lab: ShadowTradingLab | None = None,
+        max_daily_loss_pct: Decimal | None = None,
+        max_position_pct: Decimal | None = None,
     ) -> None:
         self.exchange = exchange
         self.repository = repository
@@ -75,6 +77,12 @@ class TradingEngine:
         self.paper_auto_deploy_experimental = paper_auto_deploy_experimental
         self.paper_experimental_execution_enabled = paper_experimental_execution_enabled
         self.shadow_lab = shadow_lab
+        # Percent-of-equity risk policy (see guardian.domain.risk). Only applied
+        # outside paper mode: paper trades against a fixed simulated balance, so
+        # the absolute RiskLimits passed in above are already correctly sized
+        # for it and must not be rescaled.
+        self.max_daily_loss_pct = max_daily_loss_pct
+        self.max_position_pct = max_position_pct
         self._task: asyncio.Task[None] | None = None
         self._stop = asyncio.Event()
         self._lock = asyncio.Lock()
@@ -252,6 +260,7 @@ class TradingEngine:
                 raise ValueError(
                     "Precio de mercado inválido; no se enviaron órdenes")
             self._balance = await self.exchange.balance(self.base_asset, self.quote_asset)
+            self._rescale_risk_limits_to_equity(price)
             protective_reason = self._protective_exit_reason(price)
             if protective_reason:
                 await self._execute_exit(price, protective_reason)
@@ -322,6 +331,48 @@ class TradingEngine:
                         {"error_type": type(exc).__name__, "error": str(exc)},
                     )
             return signal
+
+    def _rescale_risk_limits_to_equity(self, price: Decimal) -> None:
+        """Keep RiskLimits proportional to real account equity outside paper mode.
+
+        Paper mode trades against a fixed simulated balance, so the absolute
+        limits it was constructed with are already correctly sized and are left
+        untouched. Testnet/live accounts can hold any amount of capital, so a
+        fixed-quote limit configured for one account size would be meaningless
+        (or dangerously large) for another; instead we recompute the effective
+        limits every cycle from the account's current equity and the configured
+        risk percentages (MAX_DAILY_LOSS_PCT, MAX_POSITION_PCT).
+        """
+        if self.mode == "paper":
+            return
+        if self.max_daily_loss_pct is None or self.max_position_pct is None:
+            return
+        if not self._balance:
+            return
+        equity = self._balance.quote_free + self._balance.base_free * price
+        if equity <= 0:
+            return
+        previous = self.risk.limits
+        updated = compute_risk_limits_from_equity(
+            equity,
+            previous.order_quote_amount,
+            self.max_daily_loss_pct,
+            self.max_position_pct,
+            previous.max_trades_per_day,
+            previous.cooldown_seconds,
+        )
+        if updated != previous:
+            self.risk.limits = updated
+            self.repository.record_event(
+                "RISK_LIMITS_RESCALED",
+                "Límites de riesgo recalculados a partir del equity real de la cuenta",
+                details={
+                    "equity_quote": str(equity),
+                    "max_daily_loss_quote": str(updated.max_daily_loss_quote),
+                    "max_position_quote": str(updated.max_position_quote),
+                    "order_quote_amount": str(updated.order_quote_amount),
+                },
+            )
 
     async def _try_execute(self, signal: Signal, price: Decimal) -> str | None:
         balance = self._balance or await self.exchange.balance(self.base_asset, self.quote_asset)

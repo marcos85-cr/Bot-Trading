@@ -16,19 +16,6 @@ class RiskLimits:
     cooldown_seconds: int
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# CORRECCIÓN: Función auxiliar para calcular límites como % del equity real.
-#
-# PROBLEMA ORIGINAL: max_daily_loss_quote era un valor absoluto fijo (ej: 2 USDT).
-# Si alguien opera con 10,000 USDT reales, el límite seguía siendo 2 USDT (0.02%).
-#
-# USO: Llama a esta función al arrancar el motor (en main.py) pasando el equity
-# real obtenido del exchange, y los porcentajes del .env:
-#
-#   equity = balance.quote_free + balance.base_free * precio_actual
-#   limits = compute_risk_limits_from_equity(equity, settings)
-#
-# ─────────────────────────────────────────────────────────────────────────────
 def compute_risk_limits_from_equity(
     equity: Decimal,
     order_quote_amount: Decimal,
@@ -42,7 +29,13 @@ def compute_risk_limits_from_equity(
     como porcentaje del equity actual, en lugar de valores absolutos.
 
     Esto garantiza que al operar con capital real (ej: 5,000 USDT),
-    los límites se ajusten automáticamente al capital disponible.
+    los límites se ajusten automáticamente al capital disponible en vez
+    de usar un tope fijo pensado para otra cuenta.
+
+    `TradingEngine._rescale_risk_limits_to_equity` llama a esta función en
+    cada ciclo cuando el modo no es `paper`, usando el equity real
+    reportado por el exchange y MAX_DAILY_LOSS_PCT / MAX_POSITION_PCT.
+    Paper mode conserva los límites absolutos fijos (capital ficticio).
     """
     if equity <= Decimal("0"):
         raise ValueError(

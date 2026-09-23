@@ -35,28 +35,22 @@ class Settings(BaseSettings):
     slow_sma_period: int = Field(default=25, ge=3, le=500)
     order_quote_amount: Decimal = Field(default=Decimal("10"), gt=0)
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # CORRECCIÓN: Límites de riesgo como PORCENTAJE del equity, no valores fijos.
-    #
-    # ANTES (problemático para live):
-    #   max_position_quote: Decimal = Decimal("25")   ← fijo: 25 USDT siempre
-    #   max_daily_loss_quote: Decimal = Decimal("2")  ← fijo: 2 USDT siempre
-    #
-    # AHORA (escala con el capital real):
+    # Límites de riesgo como PORCENTAJE del equity real de la cuenta.
+    # TradingEngine los aplica en testnet/live, recalculando en cada ciclo a
+    # partir del balance reportado por el exchange (ver
+    # guardian.domain.risk.compute_risk_limits_from_equity):
     #   max_daily_loss_pct = 2.0  → con 1,000 USDT = 20 USDT máx. pérdida diaria
     #                              → con 5,000 USDT = 100 USDT máx. pérdida diaria
     #   max_position_pct   = 5.0  → con 1,000 USDT = 50 USDT posición máxima
     #                              → con 5,000 USDT = 250 USDT posición máxima
-    #
-    # Los valores absolutos (max_position_quote, max_daily_loss_quote) ya NO se
-    # leen del .env — se calculan en main.py con compute_risk_limits_from_equity().
-    # ─────────────────────────────────────────────────────────────────────────
     max_daily_loss_pct: Decimal = Field(
         default=Decimal("2.0"), gt=0, le=Decimal("20"))
     max_position_pct: Decimal = Field(
         default=Decimal("5.0"), gt=0, le=Decimal("50"))
 
-    # Mantenemos estos para compatibilidad con paper (capital ficticio fijo):
+    # Límites absolutos: usados tal cual en modo paper (capital ficticio fijo,
+    # paper_starting_quote) y como valores iniciales/semilla en testnet-live
+    # antes de que el primer ciclo recalcule a partir del equity real.
     max_daily_loss_quote: Decimal = Field(default=Decimal("2"),  gt=0)
     max_position_quote:   Decimal = Field(default=Decimal("25"), gt=0)
 

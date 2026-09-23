@@ -144,6 +144,8 @@ def build_app(settings: Settings | None = None):
         paper_auto_deploy_experimental=settings.paper_auto_deploy_experimental,
         paper_experimental_execution_enabled=settings.paper_experimental_execution_enabled,
         shadow_lab=shadow_lab,
+        max_daily_loss_pct=settings.max_daily_loss_pct,
+        max_position_pct=settings.max_position_pct,
     )
     return create_app(engine, settings, exchange.close)
 

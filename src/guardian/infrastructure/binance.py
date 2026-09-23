@@ -143,7 +143,9 @@ class BinanceSpotClient:
                 )
             payload = terminal
         fallback_price = await self.price(request.symbol)
-        return self._order_result(payload, request, fallback_price)
+        info = await self.symbol_info(request.symbol)
+        quote_asset = str(info.get("quoteAsset", ""))
+        return self._order_result(payload, request, fallback_price, quote_asset)
 
     async def ping(self) -> None:
         await self._request("GET", "/api/v3/ping")
@@ -279,12 +281,13 @@ class BinanceSpotClient:
                     "El símbolo no admite quoteOrderQty en órdenes MARKET")
             params["quoteOrderQty"] = format(request.quote_amount, "f")
         elif request.base_quantity is not None:
-            quantity, _ = await self._validate_quantity(
+            quantity, info = await self._validate_quantity(
                 request.symbol, request.base_quantity, current_price
             )
             params["quantity"] = format(quantity, "f")
         else:
             raise BinanceApiError("La orden no contiene una cantidad válida")
+        quote_asset = str(info.get("quoteAsset", ""))
         try:
             payload = await self._signed_request("POST", "/api/v3/order", params)
         except BinanceApiError as exc:
@@ -312,7 +315,7 @@ class BinanceSpotClient:
                     ),
                 )
             payload = terminal
-        return self._order_result(payload, request, current_price)
+        return self._order_result(payload, request, current_price, quote_asset)
 
     async def place_protective_stop(
         self, symbol: str, quantity: Decimal, stop_price: Decimal, limit_price: Decimal
@@ -368,13 +371,11 @@ class BinanceSpotClient:
 
     @staticmethod
     def _order_result(
-        payload: dict[str, Any], request: OrderRequest, fallback_price: Decimal
+        payload: dict[str, Any], request: OrderRequest, fallback_price: Decimal, quote_asset: str
     ) -> OrderResult:
         executed = Decimal(payload.get("executedQty", "0"))
         quote = Decimal(payload.get("cummulativeQuoteQty", "0"))
         average = quote / executed if executed else fallback_price
-        quote_asset = request.symbol[-4:] if request.symbol.endswith(
-            "USDT") else ""
         fee_quote = sum(
             (
                 Decimal(str(fill.get("commission", "0")))

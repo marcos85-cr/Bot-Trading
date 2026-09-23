@@ -245,6 +245,22 @@ def test_forward_approval_authorizes_only_paper_execution():
     assert authenticated._authenticated_strategy_error() is not None
 
 
+def test_expired_approval_blocks_authenticated_execution():
+    engine = build_engine("testnet")
+    engine.repository.save_training_result(training())
+    engine.promote_latest_strategy()
+
+    promoted_raw = engine.repository.get_state("promoted_strategy")
+    promoted = json.loads(promoted_raw)
+    # Simulate the 7-day approval window having elapsed.
+    promoted["approved_until"] = (datetime.now(UTC) - timedelta(seconds=1)).isoformat()
+    engine.repository.set_state("promoted_strategy", json.dumps(promoted))
+
+    error = engine._authenticated_strategy_error()
+    assert error is not None
+    assert "expiró" in error
+
+
 async def test_engine_loads_enough_history_for_multitimeframe_strategy():
     start = datetime(2026, 1, 1, tzinfo=UTC)
     bars = []

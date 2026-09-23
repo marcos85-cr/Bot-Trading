@@ -131,3 +131,40 @@ async def test_partial_market_response_is_polled_until_terminal(client, monkeypa
     assert post_count == 1
     assert query_count == 1
     await client.close()
+
+
+async def test_fee_is_computed_from_real_quote_asset_not_symbol_suffix(client, monkeypatch):
+    # Regression test: fees used to be attributed by guessing the quote asset
+    # from the trading symbol string (only correct for *...USDT pairs). A
+    # non-USDT-quoted pair like ETHBTC must still report its real commission.
+    async def price(_symbol):
+        return Decimal("0.05")
+
+    async def validate(_symbol, quantity, _price):
+        return quantity, {"quoteOrderQtyMarketAllowed": True, "quoteAsset": "BTC"}
+
+    async def signed(_method, _path, _params):
+        return {
+            "orderId": 99,
+            "clientOrderId": "g-fee",
+            "status": "FILLED",
+            "executedQty": "2.0",
+            "cummulativeQuoteQty": "0.1",
+            "fills": [
+                {"commission": "0.0001", "commissionAsset": "BTC"},
+                {"commission": "0.0001", "commissionAsset": "BTC"},
+                # A rebate/other-asset fill must NOT be counted as a quote fee.
+                {"commission": "5", "commissionAsset": "BNB"},
+            ],
+        }
+
+    monkeypatch.setattr(client, "price", price)
+    monkeypatch.setattr(client, "_validate_quantity", validate)
+    monkeypatch.setattr(client, "_signed_request", signed)
+
+    result = await client.place_market_order(
+        OrderRequest("ETHBTC", Side.BUY, quote_amount=Decimal("0.1"), client_order_id="g-fee")
+    )
+
+    assert result.fee_quote == Decimal("0.0002")
+    await client.close()
