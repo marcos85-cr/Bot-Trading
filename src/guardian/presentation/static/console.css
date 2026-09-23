@@ -1,0 +1,38 @@
+.view-hidden { display: none !important; }
+.workspace-title { margin: 0 0 16px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 10px; background: #0a111a; color: var(--muted); font-size: .78rem; }
+.workspace-title b { color: var(--text); font-size: .95rem; margin-right: 8px; }
+.system-alert { display: none; align-items: center; gap: 10px; margin-bottom: 13px; padding: 11px 14px; border: 1px solid #6a2b35; border-radius: 9px; background: #251118; color: var(--red); font-size: .78rem; }
+.system-alert.visible { display: flex; }
+.chart-tools, .table-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.chart-tools button, .table-tools button, .table-tools select, .analytics-head select { padding: 7px 9px; border: 1px solid var(--line2); border-radius: 7px; background: #0b131d; color: var(--muted); font-size: .7rem; }
+.chart-tools button.active, .table-tools button.active { border-color: #287158; color: var(--green); background: #10251f; }
+.analytics-board { margin-top: 16px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: #09111a; }
+.analytics-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.analytics-head span { display: block; color: var(--green); font-size: .62rem; letter-spacing: .12em; }
+.analytics-head b { display: block; margin-top: 5px; }
+.equity-chart-wrap { position: relative; height: 220px; margin-top: 13px; }
+.equity-chart-wrap canvas { width: 100%; height: 100%; }
+#equityEmpty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: .75rem; }
+.main-equity-block { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.equity-caption { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.equity-caption span, .equity-caption small { display: block; color: var(--muted); font-size: .59rem; }
+.equity-caption b { display: block; margin-top: 5px; font-size: .82rem; }
+.main-equity-chart-wrap { height: 185px; margin-top: 9px; }
+#mainEquityEmpty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: .7rem; text-align: center; }
+.analytics-kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 12px; }
+.analytics-kpis div { padding: 9px; border-top: 1px solid var(--line); }
+.analytics-kpis span { display: block; color: var(--muted); font-size: .62rem; }
+.analytics-kpis b { display: block; margin-top: 5px; font-size: .85rem; }
+.progress-track { height: 4px; margin-top: 9px; overflow: hidden; border-radius: 9px; background: var(--line2); }
+.progress-track i { display: block; height: 100%; background: var(--green); }
+.progress-copy { display: flex; justify-content: space-between; margin-top: 6px; color: var(--muted); font-size: .58rem; }
+.decision-context { margin-top: 10px; padding: 9px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); font-size: .68rem; line-height: 1.45; }
+.event-filter { margin-left: auto; }
+.engine-state-badge { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid var(--line2); border-radius: 999px; color: var(--muted); background: #0b131d; font: 800 .7rem/1 var(--font-mono, monospace); letter-spacing: .05em; }
+.engine-state-badge.active { border-color: rgba(16, 185, 129, .4); color: var(--green); background: rgba(16, 185, 129, .1); }
+.engine-state-badge.experimental { border-color: rgba(245, 158, 11, .45); color: var(--yellow, var(--amber)); background: rgba(245, 158, 11, .1); }
+.engine-state-badge.blocked { border-color: rgba(239, 68, 68, .45); color: var(--red); background: rgba(239, 68, 68, .1); }
+.control-buttons button:disabled { opacity: .34; filter: grayscale(.75); box-shadow: none !important; cursor: not-allowed; transform: none; }
+.control-buttons button:disabled:hover { filter: grayscale(.75); }
+@media (max-width: 1000px) { .analytics-kpis { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 680px) { .analytics-kpis { grid-template-columns: repeat(2, 1fr); } .analytics-head { align-items: flex-start; flex-direction: column; } }

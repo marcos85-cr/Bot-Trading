@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#070b12">
+  <title>Binance Guardian · Trading Console</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css?v=7">
+  <link rel="stylesheet" href="/assets/training.css?v=8">
+  <link rel="stylesheet" href="/assets/shadow.css?v=7">
+  <link rel="stylesheet" href="/assets/console.css?v=7">
+  <link rel="stylesheet" href="/assets/operations.css?v=7">
+  <link rel="stylesheet" href="/assets/pro.css?v=5">
+  <link rel="stylesheet" href="/assets/chart.css?v=1">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">G</span><div><b>Guardian</b><small>Trading system</small></div></div>
+      <nav aria-label="Navegación principal">
+        <a class="active" href="#overview" data-view="overview"><span>◫</span>Vista general</a><a href="#market" data-view="trading"><span>⌁</span>Trading</a><a href="#activity" data-view="operations"><span>≡</span>Operaciones</a><a href="#training" data-view="research"><span>◇</span>Investigación</a><a href="#risk" data-view="system"><span>⬡</span>Riesgo y sistema</a>
+      </nav>
+      <div class="safety-card"><span class="shield">✓</span><div><b>Modo protegido</b><small>Retiros y apalancamiento deshabilitados</small></div></div>
+      <div class="version">GUARDIAN PRO · v0.10.0</div>
+    </aside>
+    <main>
+      <header class="topbar" id="overview">
+        <div><p class="eyebrow">GUARDIAN PRO <span class="release-badge">v0.10</span></p><h1>Centro de trading seguro</h1><p class="subtitle">Supervisión, estrategia, entrenamiento y controles de ejecución.</p></div>
+        <div class="top-actions"><span id="clock" class="clock">—</span><span id="connection" class="status-pill"><i></i>Conectando</span></div>
+      </header>
+      <section class="alert paper-alert" id="modeAlert"><span class="alert-icon">P</span><div><b>Simulación segura activa</b><p>Las operaciones usan capital ficticio y precios públicos de Binance.</p></div><span id="modeBadge" class="tag">PAPER</span></section>
+      <section class="readiness-strip" aria-label="Preparación operativa">
+        <article class="readiness-card primary-readiness"><span class="readiness-icon">◉</span><div><small>PREPARACIÓN OPERATIVA</small><b id="topReadiness">Verificando sistema</b><p id="topReadinessReason">Comprobando estrategia y controles…</p></div></article>
+        <article class="readiness-card"><span class="readiness-icon">↻</span><div><small>ÓRDENES SEGURAS</small><b>Reconciliación activa</b><p>Sin reenvíos ante timeout</p></div></article>
+        <article class="readiness-card"><span class="readiness-icon">◇</span><div><small>POSICIÓN AISLADA</small><b id="managedPositionTop">0 BTC administrados</b><p>No vende activos externos</p></div></article>
+      </section>
+      <section class="kpi-grid">
+        <article class="kpi"><div class="kpi-top"><span>Equity estimado</span><span class="kpi-icon">◎</span></div><strong id="equity">—</strong><small id="equityAsset">USDT disponibles</small></article>
+        <article class="kpi"><div class="kpi-top"><span>Precio de mercado</span><span class="kpi-icon">↗</span></div><strong id="price">—</strong><small><b id="symbol">BTCUSDT</b> · <span id="interval">1m</span></small></article>
+        <article class="kpi"><div class="kpi-top"><span>P&amp;L realizado hoy</span><span class="kpi-icon">±</span></div><strong id="pnl">—</strong><small id="pnlLimit">Límite diario —</small></article>
+        <article class="kpi"><div class="kpi-top"><span>Estado operativo</span><span class="kpi-icon">◉</span></div><strong id="running" class="state-text">—</strong><small id="lastCycle">Esperando ciclo</small></article>
+      </section>
+      <section class="panel research-pulse" id="researchPulse" aria-label="Avance verificable de la investigación">
+        <div class="panel-head"><div><p class="eyebrow">AVANCE VERIFICABLE</p><h2>Qué ha aprendido el laboratorio</h2></div><span id="pulseState" class="tag">ESPERANDO</span></div>
+        <div class="pulse-grid"><div><span>Enfoques contrastados</span><b id="pulseFamilies">—</b><small>desarrollo y período reservado</small></div><div><span>Rentables fuera de muestra</span><b id="pulsePositive">—</b><small>después de costos simulados</small></div><div><span>Operaciones forward</span><b id="pulseForward">—</b><small>en carteras fantasma activas</small></div><div><span>Mejor cartera fantasma</span><b id="pulseBest">—</b><small>no es la cartera principal</small></div><div><span>Próxima evaluación</span><b id="pulseNext">—</b><small>el historial persiste entre sesiones</small></div></div>
+        <p id="pulseExplanation" class="pulse-explanation">Al entrenar, el bot comparará estrategias; ningún resultado histórico garantiza ganancias futuras.</p>
+      </section>
+      <section class="content-grid" id="market">
+        <article class="panel chart-panel">
+          <div class="panel-head chart-heading">
+            <div><p class="eyebrow">MERCADO EN VIVO</p><h2 id="chartTitle">BTC / USDT</h2></div>
+            <div class="chart-market-state"><span id="chartCandleState" class="chart-live-state"><i></i>VELA ABIERTA</span><span class="tag" id="timeframe">1m</span></div>
+          </div>
+          <div class="chart-toolbar" aria-label="Controles del gráfico">
+            <div class="chart-window-control"><span>RANGO</span><button data-window="50">50</button><button data-window="100">100</button><button class="active" data-window="250">250</button></div>
+            <label class="chart-interval-control"><span>TEMPORALIDAD</span><select id="chartInterval"><option value="">Estrategia activa</option><option value="1m">1 minuto</option><option value="5m">5 minutos</option><option value="15m">15 minutos</option><option value="1h">1 hora</option></select></label>
+            <div class="chart-layer-control"><span>CAPAS</span><button class="active" data-layer="indicators" aria-pressed="true">Indicadores</button><button class="active" data-layer="trades" aria-pressed="true">Operaciones</button><button class="active" data-layer="volume" aria-pressed="true">Volumen</button></div>
+          </div>
+          <div class="chart-summary">
+            <div class="chart-stats"><strong id="chartPrice">—</strong><span id="chartChange" class="chart-change">—</span><span id="chartRange">Rango —</span></div>
+            <div class="legend" aria-label="Leyenda de indicadores"><span><i class="dot fast"></i><span id="legendPrimary">Indicador A</span></span><span><i class="dot slow"></i><span id="legendSecondary">Indicador B</span></span></div>
+          </div>
+          <div id="chartPosition" class="chart-position" hidden>
+            <span>POSICIÓN ABIERTA</span><b id="chartPositionPnl">—</b><small id="chartPositionLevels">Entrada — · Stop — · Objetivo —</small>
+          </div>
+          <div class="chart-wrap" id="chartWrap">
+            <canvas id="chart" tabindex="0" aria-label="Gráfico interactivo de velas, volumen, indicadores y operaciones de BTCUSDT" aria-describedby="chartHelp"></canvas>
+            <div id="chartTooltip" class="chart-tooltip" role="status" aria-live="polite"></div>
+            <div id="chartEmpty" class="chart-empty">Inicia el motor para cargar el gráfico del mercado.</div>
+          </div>
+          <div class="chart-foot"><span><i class="up-square"></i>Alcista</span><span><i class="down-square"></i>Bajista</span><span><i class="trade-marker buy-marker"></i>Compra</span><span><i class="trade-marker sell-marker"></i>Venta</span><span id="candleCount">0 velas</span><span id="chartHelp" class="chart-help">Rueda: zoom · arrastra: desplazar · doble clic: ahora</span></div>
+        </article>
+        <aside class="right-stack">
+          <article class="panel signal-panel">
+            <div class="panel-head"><div><p class="eyebrow">DECISIÓN DEL MOTOR</p><h2>Señal actual</h2></div><span id="signal" class="signal-badge hold">HOLD</span></div>
+            <p id="reason" class="signal-reason">Esperando datos confirmados del mercado.</p>
+            <div class="sma-row"><div><span id="primaryLabel">Indicador A</span><b id="fast">—</b></div><div><span id="secondaryLabel">Indicador B</span><b id="slow">—</b></div></div>
+            <div class="decision-line"><span>Próxima evaluación</span><b id="nextCycle">—</b></div>
+          </article>
+          <article class="panel portfolio-panel">
+            <div class="panel-head"><div><p class="eyebrow">CARTERA</p><h2>Distribución</h2></div><span class="tag">SPOT</span></div>
+            <div class="portfolio-content"><div id="allocation" class="donut"><div><b id="basePct">0%</b><small id="baseAsset">BTC</small></div></div><div class="asset-list"><div><i class="asset-dot base"></i><span id="baseLabel">BTC</span><b id="baseBalance">0</b></div><div><i class="asset-dot quote"></i><span id="quoteLabel">USDT</span><b id="quoteBalance">—</b></div></div></div>
+          </article>
+        </aside>
+      </section>
+      <section class="lower-grid">
+        <article class="panel" id="risk"><div class="panel-head"><div><p class="eyebrow">GUARDRAILS</p><h2>Control de riesgo</h2></div><span id="riskState" class="healthy">SALUDABLE</span></div><div class="risk-item"><div><span>Operaciones diarias</span><b id="trades">0 / 0</b></div><div class="bar"><i id="tradesBar"></i></div></div><div class="risk-item"><div><span>Posición utilizada</span><b id="position">0</b></div><div class="bar"><i id="positionBar"></i></div></div><div class="risk-item"><div><span>Pérdida diaria</span><b id="loss">0</b></div><div class="bar danger-bar"><i id="lossBar"></i></div></div><div class="guard-list"><span>✓ Sin futuros</span><span>✓ Sin retiros</span><span>✓ Órdenes deduplicadas</span></div></article>
+          <article class="panel" id="strategy"><div class="panel-head"><div><p class="eyebrow">CONFIGURACIÓN</p><h2>Estrategia activa</h2></div><span id="strategyReadiness" class="tag">VERIFICANDO</span></div><p id="strategyBlocker" class="control-copy"></p><div class="config-grid"><div><span>Modelo</span><b id="strategyName">SMA Crossover</b></div><div><span>Temporalidad</span><b id="configInterval">—</b></div><div><span>SMA rápida</span><b id="fastPeriod">—</b></div><div><span>SMA lenta</span><b id="slowPeriod">—</b></div><div><span>Orden base</span><b id="orderAmount">—</b></div><div><span>Enfriamiento</span><b id="cooldown">—</b></div><div><span>Stop-loss</span><b id="stopLoss">—</b></div><div><span>Take-profit</span><b id="takeProfit">—</b></div><div><span>Trailing stop</span><b id="trailingStop">—</b></div><div><span>Reinicio diario</span><b id="dailyReset">—</b></div></div></article>
+        <article class="panel control-panel"><div class="panel-head"><div><p class="eyebrow">CONTROL</p><h2>Motor del bot</h2></div><span id="engineStateBadge" class="engine-state-badge stopped"><i id="engineLight" class="engine-light"></i><span id="engineStateText">MOTOR DETENIDO</span></span></div><p class="control-copy">El inicio activa el análisis continuo. La emergencia persiste aunque reinicies la aplicación.</p><div class="control-buttons"><button id="start" class="primary"><span>▶</span>Iniciar motor</button><button id="stop" class="secondary"><span>■</span>Detener</button><button id="emergency" class="danger"><span>!</span>Emergencia</button><button id="reset" class="ghost">Rearmar sistema</button></div><p id="message" role="status" class="message"></p></article>
+      </section>
+      <section class="ops-grid">
+        <article class="panel performance-panel"><div class="panel-head"><div><p class="eyebrow">RENDIMIENTO</p><h2>Bot contra mercado</h2></div><span class="tag" id="performancePeriod">DESDE INICIO</span></div><div class="performance-grid"><div><span>Retorno del bot</span><b id="botReturn">—</b></div><div><span>Comprar y mantener</span><b id="holdReturn">—</b></div><div><span>Exceso vs mercado</span><b id="excessReturn">—</b></div><div><span>Drawdown</span><b id="maxDrawdown">—</b></div><div><span>Tasa de aciertos</span><b id="winRate">—</b></div><div><span>Ciclos cerrados</span><b id="completedTrades">—</b></div><div><span>Expectativa/ciclo</span><b id="expectancy">—</b></div><div><span>Profit factor</span><b id="profitFactor">—</b></div><div><span>Comisiones registradas</span><b id="actualFees">—</b></div><div><span>Slippage registrado</span><b id="actualSlippage">—</b></div></div><div class="main-equity-block"><div class="equity-caption"><div><span>CURVA DE CAPITAL PRINCIPAL</span><b id="mainEquitySummary">Esperando muestras</b></div><small id="mainEquitySamples">0 puntos</small></div><div class="equity-chart-wrap main-equity-chart-wrap"><canvas id="mainEquityChart" aria-label="Curva de equity de la cartera principal"></canvas><div id="mainEquityEmpty">Inicia el motor para registrar la evolución del capital.</div></div></div><p class="benchmark-note" id="benchmarkMessage">La comparación se construye con muestras reales desde el inicio de esta versión.</p></article>
+        <article class="panel events-panel"><div class="panel-head"><div><p class="eyebrow">TELEMETRÍA</p><h2>Qué está haciendo el bot</h2></div><span id="eventStreamState" class="live-label"><i></i>CONECTANDO</span></div><div id="events" class="event-list"><div class="event-empty">Esperando actividad del motor…</div></div></article>
+      </section>
+      <section class="panel training-panel" id="training">
+          <div class="panel-head"><div><p class="eyebrow">LABORATORIO CUANTITATIVO</p><h2>Validación fuera de muestra</h2><p class="training-copy">Walk-forward purgado · ejecución en la siguiente vela · costos y stops incluidos.</p></div><div><button id="promote" class="train-button" disabled>✓ Promover candidato</button> <button id="train" class="train-button">↻ Entrenar ahora</button></div></div>
+        <div class="training-grid"><div class="training-stat"><span>Datos descargados</span><b id="trainingDataset">—</b><small id="datasetSamples">0 velas observadas en vivo</small></div><div class="training-stat"><span>Candidatos evaluados</span><b id="candidates">—</b><small id="familiesTested">estrategias y temporalidades</small></div><div class="training-stat recommendation"><span>Modelo recomendado</span><b id="recommended">—</b><small id="recommendedParameters">familia · parámetros · intervalo</small></div><div class="training-stat"><span>Retorno OOS</span><b id="validationReturn">—</b><small id="validationVsHold">fuera de muestra</small></div><div class="training-stat"><span>Profit factor</span><b id="validationProfitFactor">—</b><small id="validationExpectancy">expectativa —</small></div><div class="training-stat"><span>Costos simulados</span><b id="validationCosts">—</b><small>comisión + slippage</small></div><div class="training-stat"><span>Drawdown máximo</span><b id="validationDrawdown">—</b><small>validación</small></div><div class="training-stat"><span>Tasa de aciertos</span><b id="validationWinRate">—</b><small id="trainingSamples">sin entrenamiento</small></div><div class="training-stat"><span>Robustez temporal</span><b id="positiveFolds">—</b><small>ventanas positivas</small></div><div class="training-stat"><span>Confianza ajustada</span><b id="selectionConfidence">—</b><small>penaliza múltiples pruebas</small></div><div class="training-stat"><span>Resultado por régimen</span><b id="regimeResults">—</b><small>alcista · lateral · bajista</small></div></div>
+        <div id="rejectionReasons" class="research-reasons">Aún no existe una evaluación con el motor v0.4.</div>
+        <div class="family-comparison"><div class="panel-head"><div><p class="eyebrow">TORNEO DE ENFOQUES</p><h2>Resultado independiente por familia</h2></div><small>El ganador se elige en desarrollo; este período no se usa para seleccionarlo.</small></div><div class="table-wrap"><table><thead><tr><th>Enfoque</th><th>Intervalo</th><th>Retorno neto</th><th>Vs. mantener</th><th>Operaciones</th><th>Profit factor</th></tr></thead><tbody id="familyResults"><tr><td colspan="6" class="empty-cell">Entrena para comparar enfoques fuera de muestra.</td></tr></tbody></table></div></div>
+        <div class="training-note"><span id="trainingState" class="healthy">RECOPILANDO</span><p>Research Gate bloquea nuevas compras mientras la evidencia no supere todos los criterios. Las salidas de protección siempre permanecen habilitadas.</p><span id="trainedAt">—</span></div>
+      </section>
+      <section class="panel orders-panel" id="activity"><div class="panel-head"><div><p class="eyebrow">LEDGER DE AUDITORÍA</p><h2>Actividad de órdenes</h2></div><div class="order-meta"><span id="orderCount">0 registros</span><span id="updated">—</span></div></div><div class="table-wrap trade-scroll" role="region" aria-label="Historial de compras y ventas" tabindex="0"><table><thead><tr><th>Fecha y hora</th><th>Mercado</th><th>Lado</th><th>Cantidad</th><th>Precio medio</th><th>Importe</th><th>Comisión</th><th>Slippage</th><th>P&amp;L</th><th>Estado</th><th>Entorno</th></tr></thead><tbody id="orders"><tr><td colspan="11" class="empty-cell">Aún no hay operaciones. El motor espera un cruce confirmado.</td></tr></tbody></table></div></section>
+      <section class="panel shadow-panel" id="forward-testing">
+        <div class="panel-head"><div><p class="eyebrow">PRUEBA FORWARD PERSISTENTE</p><h2>Carteras sombra</h2><p class="training-copy">Cada combinación de familia y temporalidad opera con 1 000 USDT ficticios, señales de vela cerrada y ejecución en la apertura siguiente.</p></div><span id="shadowState" class="tag">ESPERANDO MODELOS</span></div>
+        <div class="analytics-board"><div class="analytics-head"><div><span>CURVA DE EQUITY</span><b id="selectedModelTitle">Seleccione un modelo</b></div><select id="shadowSelector" aria-label="Modelo para analizar"></select></div><div class="equity-chart-wrap"><canvas id="equityChart" aria-label="Curva de equity del modelo"></canvas><div id="equityEmpty">Esperando muestras forward.</div></div><div class="analytics-kpis"><div><span>Retorno</span><b id="selectedReturn">—</b></div><div><span>Vs. mercado</span><b id="selectedBenchmark">—</b></div><div><span>Drawdown</span><b id="selectedDrawdown">—</b></div><div><span>Sharpe/ciclo</span><b id="selectedSharpe">—</b></div><div><span>Sortino/ciclo</span><b id="selectedSortino">—</b></div><div><span>Exposición</span><b id="selectedExposure">—</b></div></div></div>
+        <div id="shadowModels" class="shadow-grid"><div class="shadow-empty">El próximo entrenamiento creará una cartera independiente por familia.</div></div>
+        <div class="shadow-policy"><b id="shadowPolicy">—</b><span>La prueba forward nunca modifica la cartera principal ni habilita dinero real.</span></div>
+        <div class="table-wrap trade-scroll" role="region" aria-label="Historial de compras y ventas forward" tabindex="0"><table><thead><tr><th>Fecha y hora</th><th>Modelo</th><th>Temporalidad</th><th>Lado</th><th>Precio</th><th>Importe</th><th>Costos</th><th>P&amp;L</th><th>Motivo</th></tr></thead><tbody id="shadowTrades"><tr><td colspan="9" class="empty-cell">Aún no hay ejecuciones forward.</td></tr></tbody></table></div>
+      </section>
+      <footer><span>Binance Guardian procesa datos localmente.</span><span>La automatización no garantiza beneficios · Supervisa siempre el sistema</span></footer>
+    </main>
+  </div>
+  <script src="/assets/app.js?v=11" defer></script>
+</body>
+</html>
